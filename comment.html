@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Comment Manager</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+       font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+    
+    
+   .hamburger {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 26px;
+  cursor: pointer;
+  z-index: 1000;
+  margin: 10px;
+  display: block; /* ✅ Now it will show */
+}
+
+   .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: #1e1e2f;
+      padding: 60px 20px 20px 20px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
+
+    .menu.show {
+      transform: translateX(0);
+    }
+
+    .menu button {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      background: #40446d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .menu-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background-color: #40446d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.menu-btn:hover {
+  background-color: #35395c;
+}
+
+    .main-container {
+      max-width: 850px;
+      margin: 30px auto;
+      background: #161b22;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      border: 1px solid #30363d;
+    }
+
+    header {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      padding-bottom: 20px;
+    }
+
+    .admin-login,
+    .page-selector {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .admin-login input,
+    .admin-login button,
+    .page-selector select {
+      padding: 10px 15px;
+      font-size: 1em;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .admin-login button {
+      background: #238636;
+      color: white;
+      cursor: pointer;
+    }
+
+    .admin-login button:hover {
+      background: #2ea043;
+    }
+
+    .page-selector select {
+      background: #0d1117;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+    }
+
+    #pinned-section {
+      background: #161b22;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 5px solid gold;
+      border: 1px solid #30363d;
+    }
+
+    #comment-container {
+      margin-top: 10px;
+    }
+
+    #comment-count {
+      font-size: 1em;
+      color: #c9d1d9;
+      margin: 10px 0;
+      text-align: right;
+    }
+
+    #comment-section {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      background-color: #0d1117;
+      padding: 0 10px;
+    }
+
+    .comment {
+      padding: 15px 0;
+      border-bottom: 1px solid #2d3748;
+    }
+
+    .reply {
+      margin-left: 40px;
+      border-left: 2px solid #444;
+      padding-left: 15px;
+    }
+
+    .meta {
+      font-size: 0.9em;
+      color: #8b949e;
+    }
+
+    .actions button {
+      margin-top: 10px;
+      margin-right: 8px;
+      background: #21262d;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .actions button:hover {
+      background: #30363d;
+    }
+    
+       @media screen and (max-width: 500px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
+        margin: 8px 0;
+      }
+
+      .menu {
+        width: 100%;
+      }
+    }
+    
+    @media screen and (max-width: 600px) {
+  .main-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  header {
+    font-size: 1.2em;
+  }
+
+  .admin-login input, .admin-login button,
+  .page-selector select {
+    width: 100%;
+    font-size: 1em;
+  }
+
+  #comment-count {
+    text-align: center;
+  }
+
+  .comment {
+    padding: 10px 0;
+  }
+
+  .hamburger {
+    font-size: 22px;
+    top: 8px;
+    left: 8px;
+  }
+
+  .menu {
+    width: 80%;
+  }
+
+  .actions button {
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
+    
+  </style>
+</head>
+<body>
+  
+  <!-- Hamburger Menu -->
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">☰</div>
+
+  <!-- Sidebar Menu -->
+  <div class="menu" id="menu">
+    <a href="index.html" class="menu-btn">📢 Admin Notice Panel</button>
+    <a href="comment.html" class="menu-btn">🛠️ Admin Comment Panel</a>
+  </div>
+
+<div class="main-container">
+  <header>🛠️ Admin Comment Panel</header>
+
+  <div class="admin-login">
+    <input type="text" id="admin-name" placeholder="Admin Username (e.g. Hoskwi)" />
+    <button onclick="unlockAdmin()">Enter</button>
+  </div>
+
+  <div class="page-selector" style="display:none;">
+    <label for="pageSelect">Select Page:</label>
+    <select id="pageSelect" onchange="changePage()">
+      <option value="comments1">comments1</option>
+      <option value="comments2">comments2</option>
+      <option value="comments3">comments3</option>
+      <option value="livecomment4">comments4</option>
+    </select>
+  </div>
+
+  <div id="pinned-section" style="display:none;"></div>
+
+  <div id="comment-container" style="display:none;">
+    <div id="comment-count">Total Comments: 0</div>
+    <div id="comment-section"></div>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAs2S6iRhnYhmqNuF0QCCYu5NuzxHxIRv0",
+    authDomain: "tvnstream-b4497.firebaseapp.com",
+    databaseURL: "https://tvnstream-b4497-default-rtdb.firebaseio.com",
+    projectId: "tvnstream-b4497",
+    storageBucket: "tvnstream-b4497.appspot.com",
+    messagingSenderId: "308384754214",
+    appId: "1:308384754214:web:2938e76cd29b288f75d4e7"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  let isAdmin = false;
+  let selectedPage = "comments1";
+
+  function unlockAdmin() {
+    const input = document.getElementById("admin-name").value.trim();
+    if (input.toLowerCase() === "hoskwi") {
+      isAdmin = true;
+      document.querySelector('.page-selector').style.display = 'block';
+      document.getElementById('comment-container').style.display = 'block';
+      loadPinned();
+      loadComments();
+    } else {
+      alert("Invalid admin name.");
+    }
+  }
+
+  function changePage() {
+    selectedPage = document.getElementById("pageSelect").value;
+    loadPinned();
+    loadComments();
+  }
+
+  function loadPinned() {
+    const pinBox = document.getElementById("pinned-section");
+    db.ref(`${selectedPage}/pinned`).on("value", snap => {
+      const pin = snap.val();
+      if (pin) {
+        pinBox.style.display = "block";
+        pinBox.innerHTML = `
+          <strong>📌 Pinned Comment</strong><br><br>
+          <b>${pin.name}</b> <span class="meta">• ${new Date(pin.timestamp).toLocaleString()}</span><br>
+          <div style="margin-top: 6px;">${pin.text}</div>
+          <div class="actions">
+            <button onclick="unpinComment()">❌ Unpin</button>
+          </div>
+        `;
+      } else {
+        pinBox.style.display = "none";
+        pinBox.innerHTML = "";
+      }
+    });
+  }
+
+  function unpinComment() {
+    if (confirm("Unpin this comment?")) {
+      db.ref(`${selectedPage}/pinned`).remove();
+    }
+  }
+
+  function loadComments() {
+    db.ref(selectedPage).on("value", snap => {
+      const comments = snap.val() || {};
+      const container = document.getElementById("comment-section");
+      const counter = document.getElementById("comment-count");
+
+      let commentCount = 0;
+
+      function build(parentId = null) {
+        return Object.entries(comments)
+          .filter(([id, c]) => id !== "pinned" && (parentId ? c.parentId === parentId : !c.parentId || c.parentId === "null"))
+          .map(([id, c]) => {
+            commentCount++;
+            return `
+              <div class="comment ${parentId ? 'reply' : ''}">
+                <div><strong>${c.name}</strong> <span class="meta">• ${new Date(c.timestamp).toLocaleString()}</span></div>
+                <div class="content">${c.text}</div>
+                ${isAdmin ? `
+                  <div class="actions">
+                    <button onclick="editComment('${id}', '${c.text.replace(/'/g, "\\'")}')">✏️ Edit</button>
+                    <button onclick="replyToComment('${id}')">↩️ Reply</button>
+                    <button onclick="pinComment('${id}', '${c.name.replace(/'/g, "\\'")}', '${c.text.replace(/'/g, "\\'")}')">📌 Pin</button>
+                    <button onclick="deleteComment('${id}')">🗑️ Delete</button>
+                  </div>` : ''
+                }
+                ${build(id).join("")}
+              </div>
+            `;
+          });
+      }
+
+      container.innerHTML = build().join("");
+      counter.textContent = `Total Comments: ${commentCount}`;
+    });
+  }
+
+  function editComment(id, oldText) {
+    const newText = prompt("Edit comment:", oldText);
+    if (newText && newText !== oldText) {
+      db.ref(`${selectedPage}/${id}/text`).set(newText);
+    }
+  }
+
+  function deleteComment(id) {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      db.ref(`${selectedPage}/${id}`).remove();
+    }
+  }
+
+  function replyToComment(parentId) {
+    const name = prompt("Your name:");
+    const text = prompt("Reply message:");
+    if (name && text) {
+      db.ref(selectedPage).push({ name, text, timestamp: Date.now(), parentId });
+    }
+  }
+
+  function pinComment(id, name, text) {
+    db.ref(`${selectedPage}/pinned`).set({ commentId: id, name, text, timestamp: Date.now() });
+    alert("Pinned!");
+  }
+  
+   function toggleMenu() {
+      document.getElementById("menu").classList.toggle("show");
+    }
+</script>
+
+</body>
+</html>
