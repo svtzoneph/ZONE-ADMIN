@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Notice Panel</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .container {
+      background: #2c2f48;
+      padding: 30px 35px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      width: 90%;
+      max-width: 500px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 10px 0 20px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #40446d;
+      color: #fff;
+    }
+
+    textarea {
+      height: 200px;
+      resize: none;
+    }
+
+    button {
+      padding: 12px 18px;
+      margin: 8px 8px 0 0;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #4caf50;
+      color: white;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button.delete {
+      background: #e53935;
+    }
+
+    button.delete:hover {
+      background: #d32f2f;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #ccc;
+      text-align: center;
+    }
+
+    #emoji-picker {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px;
+      background: #1e1e2f;
+      border-radius: 8px;
+      margin-top: 12px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .emoji {
+      cursor: pointer;
+      font-size: 20px;
+      transition: transform 0.2s;
+    }
+
+    .emoji:hover {
+      transform: scale(1.3);
+    }
+
+    @media screen and (max-width: 500px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
+        margin: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📢 Admin Notice Panel</h1>
+
+  <div class="container" id="auth-container">
+    <input type="password" id="admin-pass" placeholder="🔒 Enter admin password">
+    <button onclick="verifyPassword()">Unlock</button>
+  </div>
+
+  <div class="container" id="notice-container" style="display: none;">
+    <label for="notice-target">📍 Select target page:</label>
+    <select id="notice-target">
+      <option value="livecomment1">NANA bnb with SEVENTEEN</option>
+      <option value="Livecomment2">NO STREAM</option>
+      <option value="Livecomment3">SBS INKIGAYO</option>
+      <option value="Livecomment4">M COUNTDOWN</option>
+    </select>
+
+    <textarea id="notice-input" placeholder="✏️ Type your notice here..."></textarea>
+
+    <button onclick="toggleEmojiPicker()">Emojie</button>
+    <button onclick="postNotice()">Post</button>
+    <button class="delete" onclick="deleteNotice()">Delete</button>
+
+  <!-- Emoji Picker appears below buttons when toggled -->
+<div id="emoji-picker">
+  <!-- 😄 Emotions -->
+  <span class="emoji">😀</span><span class="emoji">😃</span><span class="emoji">😄</span><span class="emoji">😁</span>
+  <span class="emoji">😆</span><span class="emoji">😅</span><span class="emoji">😂</span><span class="emoji">🤣</span>
+  <span class="emoji">😊</span><span class="emoji">😇</span><span class="emoji">🙂</span><span class="emoji">🙃</span>
+  <span class="emoji">😉</span><span class="emoji">😍</span><span class="emoji">🥰</span><span class="emoji">😘</span>
+  <span class="emoji">😗</span><span class="emoji">😚</span><span class="emoji">😋</span><span class="emoji">😛</span>
+  <span class="emoji">😝</span><span class="emoji">😜</span><span class="emoji">🤪</span><span class="emoji">🤓</span>
+
+  <!-- ❤️ Hearts -->
+  <span class="emoji">❤️</span><span class="emoji">🧡</span><span class="emoji">💛</span><span class="emoji">💚</span>
+  <span class="emoji">💙</span><span class="emoji">💜</span><span class="emoji">🖤</span><span class="emoji">🤍</span>
+  <span class="emoji">💖</span><span class="emoji">💗</span><span class="emoji">💘</span><span class="emoji">💝</span>
+  <span class="emoji">💞</span><span class="emoji">💓</span><span class="emoji">💕</span><span class="emoji">💟</span>
+
+  <!-- 🤝 Gestures -->
+  <span class="emoji">👍</span><span class="emoji">👎</span><span class="emoji">👏</span><span class="emoji">🙌</span>
+  <span class="emoji">🫶</span><span class="emoji">🤝</span><span class="emoji">🙏</span><span class="emoji">💪</span>
+  <span class="emoji">🖐️</span><span class="emoji">✋</span><span class="emoji">✌️</span><span class="emoji">🤘</span>
+  <span class="emoji">👌</span><span class="emoji">🤏</span><span class="emoji">🫰</span><span class="emoji">👋</span>
+
+  <!-- 🧍‍♂️ People -->
+  <span class="emoji">👶</span><span class="emoji">🧒</span><span class="emoji">👦</span><span class="emoji">👧</span>
+  <span class="emoji">🧑</span><span class="emoji">👩</span><span class="emoji">👨</span><span class="emoji">🧓</span>
+  <span class="emoji">👵</span><span class="emoji">👴</span><span class="emoji">🧑‍🎤</span><span class="emoji">🧑‍🏫</span>
+
+  <!-- 🎉 Celebration -->
+  <span class="emoji">🎉</span><span class="emoji">🎊</span><span class="emoji">🎂</span><span class="emoji">🎈</span>
+  <span class="emoji">🎁</span><span class="emoji">🍾</span><span class="emoji">🥂</span><span class="emoji">🍰</span>
+
+  <!-- ✨ Symbols -->
+  <span class="emoji">✨</span><span class="emoji">🌟</span><span class="emoji">⚡</span><span class="emoji">🔥</span>
+  <span class="emoji">💥</span><span class="emoji">💯</span><span class="emoji">🚨</span><span class="emoji">🔔</span>
+  <span class="emoji">📣</span><span class="emoji">📢</span><span class="emoji">📌</span><span class="emoji">📝</span>
+
+<!-- 💎 SEVENTEEN Mini Emojis -->
+<span class="emoji">💎</span><span class="emoji">🌟</span><span class="emoji">🍑</span><span class="emoji">🐱</span>
+<span class="emoji">🐶</span><span class="emoji">🐯</span><span class="emoji">🐹</span><span class="emoji">🐻</span>
+<span class="emoji">🦊</span><span class="emoji">🐸</span><span class="emoji">🍒</span><span class="emoji">🍓</span>
+<span class="emoji">🦋</span><span class="emoji">🐰</span><span class="emoji">🌈</span><span class="emoji">🎵</span>
+<span class="emoji">💃</span><span class="emoji">🎤</span>
+
+</div>
+
+    <div class="status" id="status-msg"></div>
+  </div>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAs2S6iRhnYhmqNuF0QCCYu5NuzxHxIRv0",
+      authDomain: "tvnstream-b4497.firebaseapp.com",
+      databaseURL: "https://tvnstream-b4497-default-rtdb.firebaseio.com",
+      projectId: "tvnstream-b4497",
+      storageBucket: "tvnstream-b4497.appspot.com",
+      messagingSenderId: "308384754214",
+      appId: "1:308384754214:web:2938e76cd29b288f75d4e7"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const adminPassword = "svtzoneph17";
+
+    function getSelectedRef() {
+      const selected = document.getElementById("notice-target").value;
+      return firebase.database().ref(`${selected}/notice`);
+    }
+
+    function verifyPassword() {
+      const input = document.getElementById("admin-pass").value;
+      if (input === adminPassword) {
+        document.getElementById("auth-container").style.display = "none";
+        document.getElementById("notice-container").style.display = "block";
+        loadExistingNotice();
+      } else {
+        alert("Incorrect password. Access denied.");
+      }
+    }
+
+    function postNotice() {
+      const text = document.getElementById("notice-input").value.trim();
+      if (!text) return alert("Notice text cannot be empty.");
+      getSelectedRef().set({ text }).then(() => {
+        document.getElementById("status-msg").innerText = "Notice posted successfully.";
+      });
+    }
+
+    function deleteNotice() {
+      if (confirm("Are you sure you want to delete the current notice?")) {
+        getSelectedRef().remove().then(() => {
+          document.getElementById("status-msg").innerText = "Notice deleted.";
+          document.getElementById("notice-input").value = "";
+        });
+      }
+    }
+
+    function toggleEmojiPicker() {
+      const picker = document.getElementById("emoji-picker");
+      picker.style.display = picker.style.display === "none" ? "flex" : "none";
+    }
+
+    document.querySelectorAll('.emoji').forEach(el => {
+      el.addEventListener('click', () => {
+        const textarea = document.getElementById("notice-input");
+        const emoji = el.textContent;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        textarea.value = text.slice(0, start) + emoji + text.slice(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+      });
+    });
+
+    function loadExistingNotice() {
+      getSelectedRef().once("value").then(snap => {
+        const data = snap.val();
+        document.getElementById("notice-input").value = data && data.text ? data.text : "";
+      });
+    }
+
+    // Load notice when dropdown changes
+    document.getElementById("notice-target").addEventListener("change", loadExistingNotice);
+
+    // Disable right-click & DevTools
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", e => {
+      if (e.key === "F12" || (e.ctrlKey && (e.key === "U" || e.key === "S")) || 
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J"))) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
