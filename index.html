@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
      body {
@@ -177,26 +178,64 @@
     word-wrap: break-word;
   }
 
-  @media screen and (max-width: 500px) {
-    .container {
-      padding: 20px;
-      margin-top: 60px;
-    }
-
-    .container button {
-      width: 100%;
-      margin: 8px 0;
-    }
-
-    .menu {
-      width: 100%;
-      padding-top: 70px;
-    }
-
-    #emoji-picker {
-      justify-content: center;
-    }
+  @media screen and (max-width: 400px) {
+  body {
+    font-size: 16px;
   }
+
+  .hamburger {
+    font-size: 30px;
+    padding: 10px 15px;
+  }
+
+  .container {
+    padding: 20px;
+    margin-top: 60px;
+    width: 90%;
+  }
+
+  .container h2 {
+    font-size: 20px;
+  }
+
+  .container input[type="password"],
+  .container textarea,
+  .container select {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  .container textarea {
+    height: 150px;
+  }
+
+  .container button {
+    width: 100%;
+    margin: 10px 0;
+    font-size: 16px;
+  }
+
+  .menu {
+    width: 100%;
+    padding-top: 80px;
+  }
+
+  #emoji-picker {
+    justify-content: center;
+    max-height: 120px;
+    gap: 10px;
+    font-size: 22px;
+  }
+
+  .emoji {
+    font-size: 22px;
+  }
+
+  .current-notice-box {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
   </style>
 </head>
 <body>
