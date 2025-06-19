@@ -208,47 +208,41 @@
   }
 
   /* FIXED HAMBURGER BUTTON */
+   /* HAMBURGER BUTTON */
+  /* HAMBURGER BUTTON */
   .hamburger {
-    font-size: 22px;
-    padding: 6px 10px;
-    top: 8px;
-    left: 8px;
-    position: fixed;
+    font-size: 20px;
+    padding: 6px 8px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    z-index: 1000;
     background: transparent;
     border: none;
-    z-index: 1001;
-    color: white;
   }
 
-  /* MENU FIX: NOT FULLSCREEN ANYMORE */
+  /* HAMBURGER MENU FIX - PREVENT FULLSCREEN */
   .menu {
-    position: fixed;
-    top: 48px;
+    position: absolute;
+    top: 50px;
     left: 0;
-    width: 230px;
-    height: auto;
-    max-height: 90vh;
-    overflow-y: auto;
-    background-color: #111;
-    padding: 12px;
+    width: 220px; /* Smaller width */
+    background-color: #111; /* Adjust to match your theme */
+    padding: 10px;
     border-radius: 0 6px 6px 0;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-
-  .menu.show {
-    transform: translateX(0);
+    z-index: 999;
   }
 
   .menu-btn {
     font-size: 13px;
-    padding: 10px;
-    margin-bottom: 8px;
+    padding: 8px;
+    margin-bottom: 6px;
+    display: block;
     width: 100%;
     text-align: left;
-    display: block;
   }
+
 
   /* MAIN WRAPPER */
   .main-container {
@@ -292,11 +286,20 @@
     padding: 10px 0;
   }
 
-  .actions button {
-    font-size: 12px;
-    width: 100%;
-    padding: 6px 8px;
-    margin: 4px 0;
+  .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.actions button {
+  flex: 1;
+  font-size: 13px;
+  padding: 6px 10px;
+  margin: 0;
+  min-width: unset;
+  width: auto;
   }
 }
 
