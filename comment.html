@@ -198,61 +198,105 @@
     .actions button:hover {
       background: #30363d;
     }
-    
-       @media screen and (max-width: 500px) {
-      .container {
-        padding: 20px;
-      }
+    @media screen and (max-width: 500px) {
+  html, body {
+    font-size: 13px;
+    overflow-x: hidden;
+  }
 
-      button {
-        width: 100%;
-        margin: 8px 0;
-      }
+  /* HAMBURGER BUTTON */
+  .hamburger {
+    font-size: 20px;
+    padding: 6px 8px;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    z-index: 1000;
+    background: transparent;
+    border: none;
+  }
 
-      .menu {
-        width: 100%;
-      }
-    }
-    
-    @media screen and (max-width: 600px) {
+  /* HAMBURGER MENU FIX - PREVENT FULLSCREEN */
+  .menu {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 220px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: #111;
+    padding: 10px;
+    border-radius: 0 6px 6px 0;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+  }
+
+  .menu-btn {
+    font-size: 13px;
+    padding: 8px;
+    margin-bottom: 6px;
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
   .main-container {
-    margin: 10px;
+    width: 95%;
+    margin: 10px auto;
     padding: 15px;
   }
 
   header {
-    font-size: 1.2em;
+    font-size: 1.3em;
+    padding-bottom: 15px;
   }
 
-  .admin-login input, .admin-login button,
+  .admin-login input,
+  .admin-login button,
   .page-selector select {
     width: 100%;
-    font-size: 1em;
+    font-size: 14px;
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .admin-login button {
+    padding: 10px;
+  }
+
+  .page-selector {
+    text-align: center;
+  }
+
+  #pinned-section {
+    font-size: 13px;
+    padding: 12px;
   }
 
   #comment-count {
     text-align: center;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+
+  #comment-section {
+    max-height: 400px;
+    padding: 10px;
+    font-size: 13px;
   }
 
   .comment {
     padding: 10px 0;
   }
 
-  .hamburger {
-    font-size: 22px;
-    top: 8px;
-    left: 8px;
-  }
-
-  .menu {
-    width: 80%;
-  }
-
   .actions button {
+    font-size: 12px;
     width: 100%;
-    margin-top: 6px;
+    padding: 6px 8px;
+    margin: 4px 0;
   }
 }
+
 
     
   </style>
