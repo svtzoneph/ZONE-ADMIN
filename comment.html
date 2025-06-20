@@ -423,12 +423,12 @@
                 <div><strong>${c.name}</strong> <span class="meta">• ${new Date(c.timestamp).toLocaleString()}</span></div>
                 <div class="content">${c.text}</div>
                 ${isAdmin ? `
-                  <div class="actions">
-                    <button onclick="editComment('${id}', '${c.text.replace(/'/g, "\\'")}')">✏️ Edit</button>
-                    <button onclick="replyToComment('${id}')">↩️ Reply</button>
-                    <button onclick="pinComment('${id}', '${c.name.replace(/'/g, "\\'")}', '${c.text.replace(/'/g, "\\'")}')">📌 Pin</button>
-                    <button onclick="deleteComment('${id}')">🗑️ Delete</button>
-                  </div>` : ''
+                 <div class="actions">
+  <button onclick='editComment(${JSON.stringify(id)}, ${JSON.stringify(c.text)})'>✏️ Edit</button>
+  <button onclick='replyToComment(${JSON.stringify(id)})'>↩️ Reply</button>
+  <button onclick='pinComment(${JSON.stringify(id)}, ${JSON.stringify(c.name)}, ${JSON.stringify(c.text)})'>📌 Pin</button>
+  <button onclick='deleteComment(${JSON.stringify(id)})'>🗑️ Delete</button>
+</div>` : ''
                 }
                 ${build(id).join("")}
               </div>
@@ -478,6 +478,12 @@
     navigator.serviceWorker.register('/service-worker.js')
       .then(() => console.log("Service Worker Registered"));
   }
+  
+  window.editComment = editComment;
+window.replyToComment = replyToComment;
+window.pinComment = pinComment;
+window.deleteComment = deleteComment;
+  
 </script>
 
 </body>
