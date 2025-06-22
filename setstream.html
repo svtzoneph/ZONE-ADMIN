@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Set Stream</title>
+  <title>Admin Set Stream (Secured)</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -13,69 +13,15 @@
       margin: 0;
       padding: 0;
     }
-
     .navbar {
       padding: 15px 30px;
       text-align: center;
     }
-
     .navbar h2 {
       margin: 0;
       font-size: 1.4rem;
       color: #00bcd4;
     }
-
-    .hamburger {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      font-size: 26px;
-      cursor: pointer;
-      z-index: 1100;
-      margin: 10px;
-      padding: 5px 10px;
-      border-radius: 6px;
-      color: white;
-      display: block;
-    }
-
-    .menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 250px;
-      height: 100%;
-      background: #1e1e2f;
-      padding: 60px 20px 20px 20px;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      z-index: 1050;
-    }
-
-    .menu.show {
-      transform: translateX(0);
-    }
-
-    .menu-btn {
-      display: block;
-      width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 10px;
-      font-size: 16px;
-      background-color: #40446d;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-      box-sizing: border-box;
-    }
-
-    .menu-btn:hover {
-      background-color: #35395c;
-    }
-
     .container {
       max-width: 600px;
       margin: 30px auto;
@@ -84,15 +30,12 @@
       border-radius: 10px;
       box-shadow: 0 0 10px #000;
     }
-
     label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
     }
-
-    select,
-    input[type="text"] {
+    select, input[type="text"] {
       width: 100%;
       padding: 10px;
       border: none;
@@ -103,12 +46,10 @@
       font-size: 1rem;
       box-sizing: border-box;
     }
-
     .button-row {
       display: flex;
       gap: 10px;
     }
-
     button {
       flex: 1;
       padding: 12px;
@@ -120,76 +61,19 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     button:hover {
       background-color: #00aabf;
     }
-
     #statusMessage {
       text-align: center;
       margin-top: 20px;
       font-size: 0.95rem;
     }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 15px;
-        padding: 15px;
-      }
-    }
-    
-     @media screen and (max-width: 500px) {
-      html, body {
-        font-size: 13px;
-        overflow-x: hidden;
-      }
-
-      .hamburger {
-        font-size: 20px;
-        padding: 6px 8px;
-        top: 5px;
-        left: 5px;
-        position: absolute;
-        z-index: 1000;
-        background: transparent;
-        border: none;
-      }
-
-      .menu {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        width: 220px;
-        background-color: #111;
-        padding: 10px;
-        border-radius: 0 6px 6px 0;
-        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-        z-index: 999;
-      }
-
-      .menu-btn {
-        font-size: 13px;
-        padding: 8px;
-        margin-bottom: 6px;
-        display: block;
-        width: 100%;
-        text-align: left;
-      }
-     }
-    
   </style>
 </head>
 <body>
   <div class="navbar">
-    <h2>Admin Set Stream</h2>
-  </div>
-
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()">☰</div>
-
-  <div class="menu" id="menu">
-    <a href="index.html" class="menu-btn">📢 Admin Notice Panel</a>
-    <a href="comment.html" class="menu-btn">🛠️ Admin Comment Panel</a>
-    <a href="setstream.html" class="menu-btn">🎬 Admin Set Stream</a>
+    <h2>Admin Set Stream (Secured)</h2>
   </div>
 
   <div class="container">
@@ -241,7 +125,9 @@
         return;
       }
 
-      db.ref(`${site}/m3u8`).set(newUrl)
+      const encoded = btoa(newUrl); // base64 encode
+
+      db.ref(`${site}/m3u8`).set(encoded)
         .then(() => {
           status.textContent = `✅ Link updated for ${site}`;
           status.style.color = "lime";
@@ -268,10 +154,6 @@
           status.textContent = "❌ Error deleting link: " + err;
           status.style.color = "red";
         });
-    }
-
-    function toggleMenu() {
-      document.getElementById("menu").classList.toggle("show");
     }
   </script>
 </body>
