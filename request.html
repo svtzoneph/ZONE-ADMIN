@@ -27,8 +27,6 @@
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(to right, #141e30, #243b55);
       color: #fff;
-      margin: 0;
-      padding: 0;
       width: 100vw;
       overflow-x: hidden;
     }
@@ -45,7 +43,6 @@
       font-size: 26px;
       cursor: pointer;
       z-index: 1000;
-      margin: 10px;
     }
 
     .menu {
@@ -109,50 +106,27 @@
       background: #e53935;
       color: white;
     }
-    
-    
-   @media screen and (max-width: 500px) {
-  html, body {
-    font-size: 13px;
-    overflow-x: hidden;
-  }
 
-  /* FIXED HAMBURGER BUTTON */
-   /* HAMBURGER BUTTON */
-  /* HAMBURGER BUTTON */
-  .hamburger {
-    font-size: 15px;
-    padding: 6px 8px;
-    top: 5px;
-    left: 5px;
-    position: absolute;
-    z-index: 1000;
-    background: transparent;
-    border: none;
-  }
+    @media screen and (max-width: 500px) {
+      html, body {
+        font-size: 13px;
+        overflow-x: hidden;
+      }
 
-  .menu {
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 220px; /* Smaller width */
-    background-color: #111; /* Adjust to match your theme */
-    padding: 10px;
-    border-radius: 0 6px 6px 0;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 999;
-  }
+      .hamburger {
+        font-size: 15px;
+        padding: 6px 8px;
+        top: 5px;
+        left: 5px;
+      }
 
-  .menu-btn {
-    font-size: 13px;
-    padding: 8px;
-    margin-bottom: 6px;
-    display: block;
-    width: 100%;
-    text-align: left;
-  }
-  
-  h2 {
+      .menu {
+        top: 50px;
+        width: 220px;
+        padding: 10px;
+      }
+
+      h2 {
         font-size: 1.5em;
       }
 
@@ -170,8 +144,7 @@
         font-size: 13px;
         padding: 8px 12px;
       }
-  
-}
+    }
   </style>
 </head>
 <body>
@@ -187,7 +160,7 @@
     <a href="index.html">📢 Admin Notice Panel</a>
     <a href="comment.html">🛠️ Admin Comment Panel</a>
     <a href="setstream.html">🎬 Admin Set Stream</a>
-    <a href="request.html">Admin Request</a>
+    <a href="request.html">📋 Admin Requests</a>
   </div>
 
   <script type="module">
@@ -201,8 +174,7 @@
       projectId: "tvnstream-b4497",
       storageBucket: "tvnstream-b4497.appspot.com",
       messagingSenderId: "308384754214",
-      appId: "1:308384754214:web:2938e76cd29b288f75d4e7",
-      measurementId: "G-VFNH70R4D9"
+      appId: "1:308384754214:web:2938e76cd29b288f75d4e7"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -221,7 +193,8 @@
           const div = document.createElement("div");
           div.className = "request";
           div.innerHTML = `
-            <p><strong>${data.name}</strong> - ${data.reason}</p>
+            <p><strong>${data.name}</strong> (${data.email || "no email"})</p>
+            <p>📝 Reason: ${data.reason}</p>
             <button class="approve" onclick="approve('${uid}')">✅ Approve</button>
             <button class="deny" onclick="deny('${uid}')">❌ Deny</button>
           `;
@@ -233,30 +206,19 @@
     window.approve = function (uid) {
       const userRef = ref(db, 'joinRequests/' + uid);
       update(userRef, { status: 'approved' });
+      alert("✅ Approved successfully!");
     };
 
     window.deny = function (uid) {
       const userRef = ref(db, 'joinRequests/' + uid);
       update(userRef, { status: 'denied' });
+      alert("❌ Denied successfully.");
     };
 
     window.toggleMenu = function () {
       document.getElementById("menu").classList.toggle("show");
     };
   </script>
-  
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(() => console.log("Service Worker Registered"));
-  }
-  
-  window.editComment = editComment;
-window.replyToComment = replyToComment;
-window.pinComment = pinComment;
-window.deleteComment = deleteComment;
-  
-</script>
 
 </body>
 </html>
